@@ -77,6 +77,31 @@ bot.command(:lunch, description: "ランチを提供しているお店を探し�
   _event << 'Powered by [ホットペッパーグルメ Webサービス](http://webservice.recruit.co.jp/)'
 end
 
+bot.command(:ramen, description: "ラーメン店を探します") do |_event, *keyword_string|
+  keyword = URI.encode_www_form_component(keyword_string.join().gsub('　', ' '))
+  query_hash = {
+    "keyword" => keyword,
+    "genre" => "G013",
+  }
+
+  result = []
+  query_hash.each do |key, value|
+    result << "#{key}=#{value}"
+  end
+
+  eatries = request_eatery(result.join('&'))
+
+  eatries.each do |shop|
+    _event << "**#{shop.elements["name"].text}**"
+    _event << shop.elements["address"].text
+    _event << shop.elements["access"].text
+    _event << shop.elements["urls"].elements["pc"].text
+    _event << ""
+  end
+
+  _event << 'Powered by [ホットペッパーグルメ Webサービス](http://webservice.recruit.co.jp/)'
+end
+
 bot.command(:cafe, description: "カフェを探します") do |_event, *keyword_string|
   keyword = URI.encode_www_form_component(keyword_string.join().gsub('　', ' '))
   query_hash = {

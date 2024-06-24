@@ -7,7 +7,7 @@ require 'rexml/document'
 
 include REXML
 
-bot = Discordrb::Commands::CommandBot.new token: ENV['DISCORD_API_KEY'], prefix: '/'
+bot = Discordrb::Commands::CommandBot.new token: ENV['DISCORD_API_KEY'], prefix: '!'
 
 def request_eatery(query)
   recruit_api_key = ENV['RECRUIT_API_KEY']
@@ -20,7 +20,7 @@ def request_eatery(query)
   doc.get_elements("//shop")
 end
 
-bot.message(content: 'ping') do |event|
+bot.message(content: '!ping') do |event|
   m = event.respond('pong!')
   m.edit "Pong! Time taken: #{Time.now - event.timestamp} seconds."
 end
@@ -52,7 +52,7 @@ bot.command(:izakaya, description: "居酒屋を検索します") do |_event, *k
   _event << 'Powered by [ホットペッパーグルメ Webサービス](http://webservice.recruit.co.jp/)'
 end
 
-bot.command(:lunch, description: "ランチを検索します") do |_event, *keyword_string|
+bot.command(:lunch, description: "ランチを提供しているお店を探します") do |_event, *keyword_string|
   keyword = URI.encode_www_form_component(keyword_string.join().gsub('　', ' '))
   query_hash = {
     "keyword" => keyword,
@@ -77,7 +77,7 @@ bot.command(:lunch, description: "ランチを検索します") do |_event, *key
   _event << 'Powered by [ホットペッパーグルメ Webサービス](http://webservice.recruit.co.jp/)'
 end
 
-bot.command(:cafe, description: "カフェを3件検索します") do |_event, *keyword_string|
+bot.command(:cafe, description: "カフェを探します") do |_event, *keyword_string|
   keyword = URI.encode_www_form_component(keyword_string.join().gsub('　', ' '))
   query_hash = {
     "keyword" => keyword,
